@@ -14,9 +14,23 @@ class App extends Component {
     super(props);
     this.state = {
       value: '',
-      items: []
+      items: [],
+      allCollected: false
     }
     this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleToggleAllCollected = this.handleToggleAllCollected.bind(this);
+  }
+
+  handleToggleAllCollected() {
+    const collected = !this.state.allCollected;
+    const newItems = this.state.items.map(item => ({
+      ...item,
+      collected
+    }))
+    this.setState({
+      items: newItems,
+      allCollected: collected
+    })
   }
 
   handleAddItem(){
@@ -25,7 +39,7 @@ class App extends Component {
       ...this.state.items,
       {
         text: this.state.value,
-        complete: false,
+        collected: false,
         key: Date.now(),
       }
     ];
@@ -42,6 +56,7 @@ class App extends Component {
           value={this.state.value}
           onAddItem={this.handleAddItem}
           onChange={(value) => this.setState({ value })}
+          onToggleAllCollected={this.handleToggleAllCollected}
         />
         <View style={styles.content}>
         </View>
