@@ -25,6 +25,7 @@ class App extends Component {
       dataSource: dataSource.cloneWithRows([])
     }
     this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleDeleteItem = this.handleDeleteItem.bind(this);
     this.handleToggleAllCollected = this.handleToggleAllCollected.bind(this);
     this.handleToggleCollected = this.handleToggleCollected.bind(this);
     this.setSource = this.setSource.bind(this);
@@ -35,16 +36,22 @@ class App extends Component {
       items,
       dataSource: this.state.dataSource.cloneWithRows(itemsDatasource),
       ...restState
-    })
+    });
   }
-  handleToggleCollected(key, collected){
+  handleDeleteItem(key) {
+    const newItems = this.state.items.filter(item => {
+      return item.key !== key
+    });
+    this.setSource(newItems, newItems);
+  }
+  handleToggleCollected(key, collected) {
     const newItems = this.state.items.map(item => {
       if(item.key !== key) return item;
       return {
         ...item,
         collected
       }
-    })
+    });
     this.setSource(newItems, newItems);
   }
   handleToggleAllCollected() {
@@ -88,6 +95,7 @@ class App extends Component {
               return(
                 <Row
                   onCollected={(collected) => this.handleToggleCollected(key, collected)}
+                  onDelete={() => this.handleDeleteItem(key)}
                   key={key}
                   {...value}
                 />
