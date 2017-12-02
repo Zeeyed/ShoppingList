@@ -34,18 +34,21 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#4d4d4d',
-    fontSize: 25
+    fontSize: 18
   },
   textWrapper: {
     flex: 1,
-    marginHorizontal: 10,
+    marginLeft: 20,
+    marginTop: 5,
   },
   collected: {
     textDecorationLine: 'line-through'
   },
   delete: {
     color: '#cc9a9a',
-    fontSize: 18
+    fontSize: 17,
+    marginRight: 6,
+    marginTop: 5,
   }
 });
 

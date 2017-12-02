@@ -11,7 +11,7 @@ class Header extends Component {
         </TouchableOpacity>
         <TextInput
           style={styles.input}
-          placeholder='Type yourss product'
+          placeholder='Type your product'
           value={this.props.value}
           onChangeText={this.props.onChange}
           onSubmitEditing={this.props.onAddItem}
