@@ -6,7 +6,8 @@ import {
   View,
   ListView,
   Keyboard,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
 import Header from './header';
 import Footer from './footer';
@@ -31,7 +32,8 @@ class App extends Component {
       items: [],
       allCollected: false,
       dataSource: dataSource.cloneWithRows([]),
-      filter: 'ALL'
+      filter: 'ALL',
+      loading: true
     }
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleDeleteItem = this.handleDeleteItem.bind(this);
@@ -45,9 +47,11 @@ class App extends Component {
     AsyncStorage.getItem('items').then((response) => {
       try {
         const items = JSON.parse(response);
-        this.setSource(items, items);
+        this.setSource(items, items, { loading: false });
       } catch (error) {
-        
+				this.setState({
+					loading: false
+				})
       }
     })
   }
@@ -138,6 +142,12 @@ class App extends Component {
           onFilter={this.handleFilterItems}
           count={filterProducts('WAITING', this.state.items).length}
         />
+        { this.props.loading && <View style={styles.loading}>
+				  <ActivityIndicator
+						animating
+						size='large'
+					/>
+        </View>}
       </View>
     );
   }
@@ -160,7 +170,17 @@ const styles = StyleSheet.create({
   seperator: {
     borderWidth: 1,
     borderColor: '#F5F5F5'
-  }
+	},
+	loading: {
+		position: 'absolute',
+		left: 0,
+		top: 0,
+		right: 0,
+		bottom: 0,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'rgba(0, 0, 0, .2)'
+	}
 });
 
 export default App;
