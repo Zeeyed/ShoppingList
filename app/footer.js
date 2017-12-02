@@ -9,6 +9,7 @@ class Footer extends Component {
     ALL = 'ALL';
     return (
       <View style={styles.wrapper}>
+        <Text>{this.props.count} products</Text>
         <View style={styles.filters}>
           <TouchableOpacity
             style={[styles.filterElement, filter === ALL && styles.active]}
