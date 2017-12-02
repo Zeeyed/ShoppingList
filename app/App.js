@@ -11,8 +11,15 @@ import Header from './header';
 import Footer from './footer';
 import Row from './row';
 
-class App extends Component {
+const filterProducts = (filter, items) => {
+  return items.filter(item => {
+    if(filter === 'ALL') return true;
+    if(filter === 'WAITING') return !item.collected;
+    if(filter === 'COLLECTED') return item.collected;
+  });
+}
 
+class App extends Component {
   constructor(props){
     super(props);
     const dataSource = new ListView.DataSource({
@@ -22,10 +29,12 @@ class App extends Component {
       value: '',
       items: [],
       allCollected: false,
-      dataSource: dataSource.cloneWithRows([])
+      dataSource: dataSource.cloneWithRows([]),
+      filter: 'ALL'
     }
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleDeleteItem = this.handleDeleteItem.bind(this);
+    this.handleFilterItems = this.handleFilterItems.bind(this);
     this.handleToggleAllCollected = this.handleToggleAllCollected.bind(this);
     this.handleToggleCollected = this.handleToggleCollected.bind(this);
     this.setSource = this.setSource.bind(this);
@@ -42,7 +51,13 @@ class App extends Component {
     const newItems = this.state.items.filter(item => {
       return item.key !== key
     });
-    this.setSource(newItems, newItems);
+    this.setSource(newItems, filterProducts(this.state.filter, newItems));
+  }
+  handleFilterItems(filter) {
+    this.setSource(this.state.items,
+      filterProducts(filter, this.state.items),
+      { filter }
+    )
   }
   handleToggleCollected(key, collected) {
     const newItems = this.state.items.map(item => {
@@ -52,7 +67,7 @@ class App extends Component {
         collected
       }
     });
-    this.setSource(newItems, newItems);
+    this.setSource(newItems, filterProducts(this.state.filter, newItems));
   }
   handleToggleAllCollected() {
     const collected = !this.state.allCollected;
@@ -60,7 +75,7 @@ class App extends Component {
       ...item,
       collected
     }))
-    this.setSource(newItems, newItems, { allCollected: collected})
+    this.setSource(newItems, filterProducts(this.state.filter, newItems), { allCollected: collected})
   }
 
   handleAddItem(){
@@ -73,7 +88,7 @@ class App extends Component {
         key: Date.now(),
       }
     ];
-    this.setSource(newItems, newItems, {value: ''})
+    this.setSource(newItems, filterProducts(this.state.filter, newItems), {value: ''})
   }
 
   render() {
@@ -106,7 +121,10 @@ class App extends Component {
             }}
           />
         </View>
-        <Footer />
+        <Footer
+          filter={this.state.filter}
+          onFilter={this.handleFilterItems}
+        />
       </View>
     );
   }
