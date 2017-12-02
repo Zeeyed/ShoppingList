@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Switch } from 'react-native';
 
 class Row extends Component {
   render() {
+    const { collected } = this.props;
     return (
       <View style={styles.wrapper}>
-        <Text style={styles.text}>{this.props.text}</Text>
+        <Switch
+          value={collected}
+          onValueChange={this.props.onCollected}
+        />
+        <View style={styles.textWrapper}>
+          <Text style={[styles.text, collected && styles.collected]}>
+            {this.props.text}
+          </Text>
+        </View>
       </View>
     );
   }
@@ -21,6 +30,13 @@ const styles = StyleSheet.create({
   text: {
     color: '#4d4d4d',
     fontSize: 25
+  },
+  textWrapper: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  collected: {
+    textDecorationLine: 'line-through'
   }
 });
 

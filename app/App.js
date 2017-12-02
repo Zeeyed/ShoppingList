@@ -26,6 +26,7 @@ class App extends Component {
     }
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleToggleAllCollected = this.handleToggleAllCollected.bind(this);
+    this.handleToggleCollected = this.handleToggleCollected.bind(this);
     this.setSource = this.setSource.bind(this);
   }
 
@@ -35,6 +36,16 @@ class App extends Component {
       dataSource: this.state.dataSource.cloneWithRows(itemsDatasource),
       ...restState
     })
+  }
+  handleToggleCollected(key, collected){
+    const newItems = this.state.items.map(item => {
+      if(item.key !== key) return item;
+      return {
+        ...item,
+        collected
+      }
+    })
+    this.setSource(newItems, newItems);
   }
   handleToggleAllCollected() {
     const collected = !this.state.allCollected;
@@ -76,6 +87,7 @@ class App extends Component {
             renderRow={({key, ...value}) => {
               return(
                 <Row
+                  onCollected={(collected) => this.handleToggleCollected(key, collected)}
                   key={key}
                   {...value}
                 />
